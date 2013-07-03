@@ -1,0 +1,121 @@
+﻿@{
+    ViewBag.Title = "Index";
+}
+<script src="../bundles/jquery"></script>
+<script src="../bundles/jquerycolor"></script>
+<script src="../bundles/knockout"></script>
+<script src="../Scripts/jquery.signalR-1.1.2.js"></script>
+<script src="../signalr/hubs"></script>
+<script src="~/signalr/hubs"></script>
+
+
+<script>
+
+    var order = function (d) {
+        var that = {};
+        that.tableId = ko.observable(d.tableId|| 1);
+        that.items = ko.observableArray(d.items||[{ quantity: 0, name: "" }]);
+        return that;
+    };
+    var viewmodel = function (hub) {
+        var that = {};
+
+        that.orders = ko.observableArray([]);
+        that.newOrder = ko.observable(order({ tableId: "", items: null }));
+        that.orderCountFromServer = ko.observable();
+        that.drinks = ko.observableArray(['','Bier', 'Cola', 'Water']);
+        that.resetNewOrder=function() {
+            that.newOrder(order());
+        };
+        that.addOrderItem=function(){
+            that.newOrder().items.push({quantity:0,name:""});
+        };
+        that.saveNewOrder = function () {
+            var order = ko.toJS(that.newOrder());
+            console.log(order);
+            hub.server.addOrder(order).done(function(orderCount){
+                that.orderCountFromServer(orderCount);
+            });
+        };
+
+
+        return that;
+    }
+    
+
+    $(function () {
+
+
+
+        var orderManager = $.connection.orderManager;
+        var vm = viewmodel(orderManager);
+
+        function init() {
+            return orderManager.server.getNotPaidOrders();
+        }
+
+        // Add client-side hub methods that the server will call
+        $.extend(orderManager.client, {
+            incomingOrder:function(d){
+                
+                vm.orders.push(d);
+            }
+
+        });
+
+        // Start the connection
+        $.connection.hub.start()
+            .pipe(init)
+            .done(function (orders) {
+
+                console.log(orders);
+                vm.orders(orders);
+
+            });
+
+        ko.applyBindings(vm);
+    });
+</script>
+
+<h2>Index</h2>
+
+<section>
+    <span data-bind="text:orderCountFromServer"></span>
+    <ul data-bind="foreach:orders">
+        <li>
+            Tafel <span data-bind="text:TableId"></span>
+            <ul data-bind="foreach:Items">
+                <li>
+                    <span data-bind="text:Quantity"></span> <span data-bind="text:Name"></span>
+                </li>
+            </ul>
+        </li>
+
+    </ul>
+</section>
+
+
+<section>
+
+    <div data-bind="with:newOrder">
+        Table Number <input type="number" /> 
+        <br />
+        <div data-bind="foreach:items">
+
+            <input type="number" data-bind="value:quantity" /> Quantity<br />
+            <select data-bind="options:$root.drinks,value: name"></select>
+        </div>
+
+    </div>
+
+
+    <input type="submit" value="Add" data-bind="click: addOrderItem"/>
+        <br />
+        <br />
+    <input type="submit" value="save" data-bind="click: saveNewOrder"/>
+        <br />
+        <br />
+     <input type="submit" value="rest" data-bind="click: resetNewOrder"/>
+</section>
+
+
