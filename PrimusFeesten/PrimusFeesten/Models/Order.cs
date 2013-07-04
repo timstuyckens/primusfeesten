@@ -7,6 +7,7 @@ namespace PrimusFeesten.Models
 {
     public class Order
     {
+        public Guid Id { get; set; }
         public int TableId { get; set; }
         public List<OrderItem> Items { get; set; }
     }
