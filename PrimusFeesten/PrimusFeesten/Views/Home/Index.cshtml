@@ -4,6 +4,7 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
        <meta name="viewport" content="width=device-width, initial-scale=1">
         <link href="~/Content/jquery.mobile-1.3.1.min.css" rel="stylesheet" />
+        <link href="~/Content/jquery.pnotify.default.css" rel="stylesheet" />
         <title></title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -26,6 +27,9 @@
             #ordersGrid .ui-link {
                 color: #3e3e3e;
             }
+
+            .orderItemsGrid.ui-grid-a .ui-block-a { width: 35% }
+            .orderItemsGrid.ui-grid-a .ui-block-b { width: 65%; } 
         </style>
 
     </head>
@@ -52,7 +56,7 @@
                         <div class="ui-grid-a">
                              <div class="ui-block-a">
 
-                                  <div class="ui-grid-a">
+                                  <div class="ui-grid-a orderItemsGrid">
 
                                        <div class="ui-block-a">
                                             <input type="number" data-bind="attr:{'id':'drinksQuantity'+$index()},value:quantity"/>
@@ -177,7 +181,7 @@
 <script src="../Scripts/jquery.signalR-1.1.2.js"></script>
 <script src="../signalr/hubs"></script>
 <script src="~/signalr/hubs"></script>
-
+<script src="~/Scripts/jquery.pnotify.min.js"></script>
 
 <script>
 
@@ -204,7 +208,64 @@
     };
 
 
-    (function(){
+    (function () {
+
+
+        var toaster = (function () {
+            var that = {};
+            var makeRemovableToast = function (t) {
+                var that = {};
+                that.remove = function () {
+                    t.pnotify_remove();
+                };
+                t.click(function () {
+                    that.remove();
+                });
+                return that;
+            };
+            var toast = function (toastMessage, icon) {
+                var theme = "d";
+                var iconHtml = '<a data-role="button" data-icon="' + icon + '" data-iconpos="notext" data-mini="true" data-inline="true" class="succesMessageIcon" data-theme="' + theme + '">Delete</a>';
+                var toast = $.pnotify({
+                    title: iconHtml + toastMessage,
+                    text: "",
+                    addclass: 'ui-corner-all ui-bar ui-bar-' + theme,
+                    opacity: 0.93,
+                    nonblock: true,
+                    nonblock_opacity: 1
+                });
+                $(".succesMessageIcon").button();
+                return makeRemovableToast(toast);
+            };
+
+            that.toastSuccess = function (toastMessage) {
+                return toast(toastMessage, "check");
+            };
+            that.toastError = function (toastMessage) {
+                return toast(toastMessage, "alert");
+            };
+            that.toastInfo = function (toastMessage) {
+                return toast(toastMessage, "info");
+            };
+            //decorates Promise With Toast
+            that.addBusy = function (promise, message) {
+                if (!promise) return;
+                var m = message || "Een ogenblik geduld";
+                var toast = that.toastInfo(m);
+                return promise
+                        .fail(function () {
+                            that.toastError("Technische fout. Probeer opnieuw");
+                        })
+                        .always(function () {
+                            setTimeout(function () {
+                                toast.remove();
+                            },1000);
+                            
+                        });
+            };
+            return that;
+        })();
+
         var defaultPrice = 1.8;
         var prices = {
             "Bier": defaultPrice,
@@ -279,10 +340,9 @@
             };
             that.saveNewOrder = function () {
                 var order = ko.toJS(that.newOrder());
-                console.log(order);
-                hub.server.addOrder(order).done(function(orderCount){
+                toaster.addBusy(hub.server.addOrder(order).done(function(orderCount){
                     that.orderCountFromServer(orderCount);
-                });
+                }),"Besteld");
             };
             that.removeSelected = function () {
                 var selectedOrder = that.selectedOrder();
