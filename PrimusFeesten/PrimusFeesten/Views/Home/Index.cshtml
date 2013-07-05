@@ -1,26 +1,162 @@
-﻿@{
-    ViewBag.Title = "Index";
-}
-<link href="~/Content/jquery.mobile-1.3.1.min.css" rel="stylesheet" />
-<style>
+﻿<!DOCTYPE html>
+ <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+       <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link href="~/Content/jquery.mobile-1.3.1.min.css" rel="stylesheet" />
+        <title></title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    .my-breakpoint>div {
-	padding: 10px;
-    }
-    .my-breakpoint a {
-	    text-decoration:none;
-    }
+        <style>
 
-    .orderTitle {
-	    text-align: center;
-    }
-   #ordersGrid .ui-link:visited {
-       color: #3e3e3e;
-    }
-    #ordersGrid .ui-link {
-        color: #3e3e3e;
-    }
-</style>
+            .my-breakpoint>div {
+	        padding: 10px;
+            }
+            .my-breakpoint a {
+	            text-decoration:none;
+            }
+
+            .orderTitle {
+	            text-align: center;
+            }
+           #ordersGrid .ui-link:visited {
+               color: #3e3e3e;
+            }
+            #ordersGrid .ui-link {
+                color: #3e3e3e;
+            }
+        </style>
+
+    </head>
+<body>
+
+
+
+<div data-role="page" id="CreateOrder">
+
+    <div data-role="header">
+        <h1>Nieuwe bestelling</h1>
+         <a href="#Overview" data-icon="bars">Overzicht</a>
+    </div>
+
+    <div data-role="content">
+
+            <form data-bind="with:newOrder">
+                 <div data-role="fieldcontain">
+                    <label for="tableNumberInput">Tafel nummer</label>
+                    <input type="text" name="textinput-fc" id="tableNumberInput" placeholder="Tafel nummer" value="" data-bind="value:tableId">
+                </div>
+                <div id="drinksContainer">
+                    <!-- ko foreach:items -->
+                        <div class="ui-grid-a">
+                             <div class="ui-block-a">
+                                 <input type="text" data-bind="attr:{'id':'drinksQuantity'+$index()},value:quantity"/>
+                            </div>
+                            <div class="ui-block-b">
+                                <select data-bind="options:$root.drinks,value: name,jqmRefreshSelect:$root.drinks,attr:{'id':'drinksSelect'+$index()}"></select>
+                            </div>
+                        </div>
+                    <!-- /ko --> 
+
+                </div>
+
+
+
+                <a href="#" data-role="button" data-inline="true" data-icon="plus" data-bind="click: addEmptyOrderItem">Extra item</a>
+
+                <div data-role="fieldcontain">
+                    <label for="priceDisplay">Totaal </label>
+                    <span data-bind="text:price" id="priceDisplay"></span> EUR
+                </div>
+            </form>
+    </div>
+    <div data-role="footer" data-position="fixed">
+        <div data-role="navbar">
+			<ul>
+				<li>
+                    <a href="#" data-role="button" data-icon="delete" data-theme="b" data-bind="click: resetNewOrder">Annuleren</a>
+				</li>
+				<li>
+                    <a href="#" data-role="button" data-icon="plus" data-theme="b" data-bind="click: saveNewOrder">Bestellen!</a>
+				</li>
+			</ul>
+		</div>
+    </div>
+
+</div>
+
+
+<div data-role="page" id="Overview">
+  <div data-role="header">
+    <h1>Bestellingen   <span data-bind="text:orderCountFromServer"></span> </h1>
+    <a href="#CreateOrder" data-icon="bars">Bestellen</a>
+  </div>
+  <div data-role="content">
+
+       	<div data-role="popup" id="changeStatePopup" data-position-to="window" data-overlay-theme="a" class="ui-content" >
+              
+               <div data-bind="if:selectedOrder">
+                 Tafel <span data-bind="text:selectedOrder().TableId"></span>
+                </div> 
+			    <a href="#" data-rel="back" data-role="button" data-theme="c" data-icon="delete" data-iconpos="notext" class="ui-btn-right">Sluiten</a>
+			
+			    <a href="#" data-role="button" data-icon="delete" data-iconpos="left" data-rel="back" id="removeOrderButton" data-theme="e" data-bind="click:removeSelected">Verwijderen</a>
+
+                <a href="#" data-role="button" data-icon="delete" data-iconpos="left" data-rel="back" id="changeToReadyButton" data-theme="e">Aanduiden als klaar</a>
+               
+
+		</div>
+      	<script type="text/html" id="order-template">
+			<a class="ui-corner-all ui-bar ui-bar-c"  href="#">
+				<div class="orderTitle">
+				    Tafel <span data-bind="text:TableId"></span>
+				</div>   
+				<div data-bind="foreach:Items" >
+                    <span data-bind="text:Quantity"></span> <span data-bind="text:Name"></span><br />
+				</div>
+			</a>
+		</script>
+		<div class="ui-grid-c my-breakpoint" data-bind="foreach: orders" id="ordersGrid">
+			<!-- ko if: $index()%4===0 -->
+			<div class="ui-block-a">
+				<div data-bind="template: { name: 'order-template', data: $data }"></div>	
+			</div>
+			<!-- /ko --> 
+			<!-- ko if: $index()%4===1 -->
+			<div class="ui-block-b">
+				<div data-bind="template: { name: 'order-template', data: $data }"></div>	
+			</div>
+			<!-- /ko --> 			 
+			<!-- ko if: $index()%4===2-->
+			<div class="ui-block-c">
+				<div data-bind="template: { name: 'order-template', data: $data }"></div>	
+			</div>
+			<!-- /ko --> 				 
+			<!-- ko if: $index()%4===3-->
+			<div class="ui-block-d">
+				<div data-bind="template: { name: 'order-template', data: $data }"></div>	
+			</div>
+			<!-- /ko --> 					
+		</div>
+
+       
+
+  </div>
+    <div data-role="footer" data-position="fixed">
+        <div data-role="navbar">
+			<ul>
+				<li>
+                    <a href="#" data-role="button" data-icon="delete" data-theme="b" data-bind="click: resetNewOrder" class="ui-btn-active ui-state-persist">Actief</a>
+				</li>
+				<li>
+                    <a href="#" data-role="button" data-icon="plus" data-theme="b" data-bind="click: saveNewOrder">Klaar</a>
+				</li>
+			</ul>
+		</div>
+    </div>
+</div>
+
 
 <script src="../bundles/jquery"></script>
 <script src="../bundles/jquerycolor"></script>
@@ -184,134 +320,7 @@
 </script>
 
 
-
-<div data-role="page" id="CreateOrder">
-
-    <div data-role="header">
-        <h1>Nieuwe bestelling</h1>
-         <a href="#Overview" data-icon="bars">Overzicht</a>
-    </div>
-
-    <div data-role="content">
-
-            <form data-bind="with:newOrder">
-                 <div data-role="fieldcontain">
-                    <label for="tableNumberInput">Tafel nummer</label>
-                    <input type="text" name="textinput-fc" id="tableNumberInput" placeholder="Tafel nummer" value="" data-bind="value:tableId">
-                </div>
-                <div id="drinksContainer">
-                    <!-- ko foreach:items -->
-                        <div class="ui-grid-a">
-                             <div class="ui-block-a">
-                                 <input type="text" data-bind="attr:{'id':'drinksQuantity'+$index()},value:quantity"/>
-                            </div>
-                            <div class="ui-block-b">
-                                <select data-bind="options:$root.drinks,value: name,jqmRefreshSelect:$root.drinks,attr:{'id':'drinksSelect'+$index()}"></select>
-                            </div>
-                        </div>
-                    <!-- /ko --> 
-
-                </div>
-
-
-
-                <a href="#" data-role="button" data-inline="true" data-icon="plus" data-bind="click: addEmptyOrderItem">Extra item</a>
-
-                <div data-role="fieldcontain">
-                    <label for="priceDisplay">Totaal </label>
-                    <span data-bind="text:price" id="priceDisplay"></span> EUR
-                </div>
-            </form>
-    </div>
-    <div data-role="footer" data-position="fixed">
-        <div data-role="navbar">
-			<ul>
-				<li>
-                    <a href="#" data-role="button" data-icon="delete" data-theme="b" data-bind="click: resetNewOrder">Annuleren</a>
-				</li>
-				<li>
-                    <a href="#" data-role="button" data-icon="plus" data-theme="b" data-bind="click: saveNewOrder">Bestellen!</a>
-				</li>
-			</ul>
-		</div>
-    </div>
-
-</div>
-
-
-<div data-role="page" id="Overview">
-  <div data-role="header">
-    <h1>Bestellingen   <span data-bind="text:orderCountFromServer"></span> </h1>
-    <a href="#CreateOrder" data-icon="bars">Bestellen</a>
-  </div>
-  <div data-role="content">
-
-       	<div data-role="popup" id="changeStatePopup" data-position-to="window" data-overlay-theme="a" class="ui-content" >
-              
-               <div data-bind="if:selectedOrder">
-                 Tafel <span data-bind="text:selectedOrder().TableId"></span>
-                </div> 
-			    <a href="#" data-rel="back" data-role="button" data-theme="c" data-icon="delete" data-iconpos="notext" class="ui-btn-right">Sluiten</a>
-			
-			    <a href="#" data-role="button" data-icon="delete" data-iconpos="left" data-rel="back" id="removeOrderButton" data-theme="e" data-bind="click:removeSelected">Verwijderen</a>
-
-                <a href="#" data-role="button" data-icon="delete" data-iconpos="left" data-rel="back" id="changeToReadyButton" data-theme="e">Aanduiden als klaar</a>
-               
-
-		</div>
-      	<script type="text/html" id="order-template">
-			<a class="ui-corner-all ui-bar ui-bar-c"  href="#">
-				<div class="orderTitle">
-				    Tafel <span data-bind="text:TableId"></span>
-				</div>   
-				<div data-bind="foreach:Items" >
-                    <span data-bind="text:Quantity"></span> <span data-bind="text:Name"></span><br />
-				</div>
-			</a>
-		</script>
-		<div class="ui-grid-c my-breakpoint" data-bind="foreach: orders" id="ordersGrid">
-			<!-- ko if: $index()%4===0 -->
-			<div class="ui-block-a">
-				<div data-bind="template: { name: 'order-template', data: $data }"></div>	
-			</div>
-			<!-- /ko --> 
-			<!-- ko if: $index()%4===1 -->
-			<div class="ui-block-b">
-				<div data-bind="template: { name: 'order-template', data: $data }"></div>	
-			</div>
-			<!-- /ko --> 			 
-			<!-- ko if: $index()%4===2-->
-			<div class="ui-block-c">
-				<div data-bind="template: { name: 'order-template', data: $data }"></div>	
-			</div>
-			<!-- /ko --> 				 
-			<!-- ko if: $index()%4===3-->
-			<div class="ui-block-d">
-				<div data-bind="template: { name: 'order-template', data: $data }"></div>	
-			</div>
-			<!-- /ko --> 					
-		</div>
-
-       
-
-  </div>
-    <div data-role="footer" data-position="fixed">
-        <div data-role="navbar">
-			<ul>
-				<li>
-                    <a href="#" data-role="button" data-icon="delete" data-theme="b" data-bind="click: resetNewOrder" class="ui-btn-active ui-state-persist">Actief</a>
-				</li>
-				<li>
-                    <a href="#" data-role="button" data-icon="plus" data-theme="b" data-bind="click: saveNewOrder">Klaar</a>
-				</li>
-			</ul>
-		</div>
-    </div>
-</div>
-
-
-
-
-
+    </body>
+</html>
 
 
