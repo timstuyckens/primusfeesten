@@ -51,7 +51,19 @@
                     <!-- ko foreach:items -->
                         <div class="ui-grid-a">
                              <div class="ui-block-a">
-                                 <input type="text" data-bind="attr:{'id':'drinksQuantity'+$index()},value:quantity"/>
+
+                                  <div class="ui-grid-a">
+
+                                       <div class="ui-block-a">
+                                            <input type="number" data-bind="attr:{'id':'drinksQuantity'+$index()},value:quantity"/>
+                                       </div> 
+                                       <div class="ui-block-b">
+                                         <div data-role="controlgroup" data-type="horizontal" >
+                                            <a href="#" data-role="button" data-icon="plus" data-iconpos="notext" data-inline="true" data-bind="click:moreQuantity">More</a>
+                                            <a href="#" data-role="button" data-icon="minus" data-iconpos="notext" data-inline="true" data-bind="click:lessQuantity">Less</a>
+                                        </div>
+                                      </div>
+                                </div>
                             </div>
                             <div class="ui-block-b">
                                 <select data-bind="options:$root.drinks,value: name,jqmRefreshSelect:$root.drinks,attr:{'id':'drinksSelect'+$index()}"></select>
@@ -204,6 +216,15 @@
             that.name = ko.observable(d.name || "");
             that.quantity = ko.observable(d.quantiy || 0);
 
+            that.moreQuantity = function () {
+                that.quantity(that.quantity() + 1);
+            };
+            that.lessQuantity = function () {
+                var oldVal = that.quantity();
+                if (oldVal >0 ) {
+                    that.quantity(that.quantity() - 1);
+                }
+            };
             that.name.subscribe(function () { parent.calculatePrice(); });
             that.quantity.subscribe(function () { parent.calculatePrice(); });
 
