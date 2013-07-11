@@ -48,11 +48,12 @@
     </div>
 
     <div data-role="content">
-
-            <form data-bind="with:newOrder">
+            <!-- ko if:newOrder -->
+            <form data-bind="with:newOrder" onsubmit="">
                  <div data-role="fieldcontain">
                     <label for="tableNumberInput">Tafel nummer</label>
-                    <input type="text" name="textinput-fc" id="tableNumberInput" placeholder="Tafel nummer" value="" data-bind="value:tableId">
+                   @* <input type="text" name="textinput-fc" id="tableNumberInput" placeholder="Tafel nummer" value="" data-bind="value:tableId">*@
+                    <input type="range" name="slider-1" value="1" min="1" max="20" id="tableNumberInput" placeholder="Tafel nummer"data-bind="value:tableId" />
                 </div>
                 <div id="drinksContainer">
                     <!-- ko foreach:items -->
@@ -89,6 +90,7 @@
                     <span data-bind="text:price" id="priceDisplay"></span> EUR
                 </div>
             </form>
+            <!-- /ko -->
     </div>
     <div data-role="footer" data-position="fixed">
         <div data-role="navbar">
@@ -202,8 +204,7 @@
         init: function (element, valueAccessor, allBindingsAccessor) {
             ko.utils.unwrapObservable(valueAccessor()); //just to create a dependency
             try {
-                if(!$(element).parent().parent().hasClass("ui-select"))
-                    $(element).selectmenu();
+                $(element).selectmenu();
             } catch (e) {
                 console.log(e);
             }
@@ -212,7 +213,10 @@
 
 
     (function () {
-
+        //send data to socket on click button
+        $("form").bind('submit', function () {
+            return false;
+        });
 
         var toaster = (function () {
             var that = {};
@@ -281,12 +285,12 @@
             that.quantity = ko.observable(d.quantiy || 0);
 
             that.moreQuantity = function () {
-                that.quantity(that.quantity() + 1);
+                that.quantity(parseInt(that.quantity(),10) + 1);
             };
             that.lessQuantity = function () {
-                var oldVal = that.quantity();
-                if (oldVal >0 ) {
-                    that.quantity(that.quantity() - 1);
+                var oldVal =parseInt( that.quantity(),10);
+                if (oldVal > 0 ) {
+                    that.quantity(oldVal - 1);
                 }
             };
             that.name.subscribe(function () { parent.calculatePrice(); });
@@ -336,10 +340,9 @@
             that.orderCountFromServer = ko.observable();
             that.drinks = ko.observableArray(['','Bier', 'Cola', 'Water']);
             that.resetNewOrder = function () {
-                $("#drinksContainer .ui-select").remove();
-                $("#drinksContainer input").unwrap();
                 that.newOrder().items([]);
-                that.newOrder(order({}));
+                that.newOrder().tableId(1);
+                that.newOrder().addEmptyOrderItem();
             };
             that.saveNewOrder = function () {
                 var order = ko.toJS(that.newOrder());
