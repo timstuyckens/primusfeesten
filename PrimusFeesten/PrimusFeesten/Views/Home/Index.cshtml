@@ -5,10 +5,10 @@
        <meta name="viewport" content="width=device-width, initial-scale=1">
         <link href="~/Content/jquery.mobile-1.3.1.min.css" rel="stylesheet" />
         <link href="~/Content/jquery.pnotify.default.css" rel="stylesheet" />
-        <title></title>
+        <title>Order a drink!</title>
         <meta name="description" content="">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-
+        <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
+        <meta name="viewport" content="width=device-width, initial-scale=1">    
         <style>
 
             .my-breakpoint>div {
@@ -30,6 +30,9 @@
 
             .orderItemsGrid.ui-grid-a .ui-block-a { width: 30% }
             .orderItemsGrid.ui-grid-a .ui-block-b { width: 70%; } 
+
+            .itemsGrid.ui-grid-a > .ui-block-a { width: 60% }
+            .itemsGrid.ui-grid-a > .ui-block-b { width: 40%; } 
         </style>
 
     </head>
@@ -53,7 +56,7 @@
                 </div>
                 <div id="drinksContainer">
                     <!-- ko foreach:items -->
-                        <div class="ui-grid-a">
+                        <div class="ui-grid-a itemsGrid">
                              <div class="ui-block-a">
 
                                   <div class="ui-grid-a orderItemsGrid">
