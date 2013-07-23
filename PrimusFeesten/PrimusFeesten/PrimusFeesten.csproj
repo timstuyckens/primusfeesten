@@ -149,6 +149,7 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Content Include="Content\primusfeesten.css" />
     <Content Include="Content\images\ajax-loader.gif" />
     <Content Include="Content\images\ajax-loader.png" />
     <Content Include="Content\images\icons-18-black.png" />
@@ -176,6 +177,7 @@
     <Content Include="Scripts\jquery.signalR-1.1.2.min.js" />
     <Content Include="Scripts\knockout-2.2.1.debug.js" />
     <Content Include="Scripts\knockout-2.2.1.js" />
+    <Content Include="Scripts\primusfeesten.js" />
     <Content Include="SignalR.Sample\SignalR.StockTicker.js" />
     <Content Include="SignalR.Sample\StockTicker.css" />
     <Content Include="SignalR.Sample\StockTicker.html" />
@@ -190,6 +192,8 @@
     <Content Include="Scripts\jquery-2.0.2.min.map" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Scripts\jquery.mobile-1.3.1.min.map" />
+    <Content Include="Views\Home\CreateOrder.cshtml" />
+    <Content Include="Views\Home\Overview.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

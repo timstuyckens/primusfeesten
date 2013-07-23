@@ -1,0 +1,69 @@
+﻿<div data-role="page" id="Overview">
+  <div data-role="header">
+    <h1>Bestellingen   <span data-bind="text:orderCountFromServer"></span> </h1>
+    <a href="#CreateOrder" data-icon="bars">Bestellen</a>
+  </div>
+  <div data-role="content">
+
+       	<div data-role="popup" id="changeStatePopup" data-position-to="window" data-overlay-theme="a" class="ui-content" >
+              
+               <div data-bind="if:selectedOrder">
+                 Tafel <span data-bind="text:selectedOrder().TableId"></span>
+                </div> 
+			    <a href="#" data-rel="back" data-role="button" data-theme="c" data-icon="delete" data-iconpos="notext" class="ui-btn-right">Sluiten</a>
+
+			    <a href="#" data-role="button" data-icon="delete" data-iconpos="left" data-rel="back" id="removeOrderButton" data-theme="e" data-bind="click:removeSelected">Verwijderen</a>
+
+                <a href="#" data-role="button" data-icon="delete" data-iconpos="left" data-rel="back" id="changeToReadyButton" data-theme="e">Aanduiden als klaar</a>
+               
+
+		</div>
+      	<script type="text/html" id="order-template">
+			<a class="ui-corner-all ui-bar ui-bar-c"  href="#">
+				<div class="orderTitle">
+				    Tafel <span data-bind="text:TableId"></span>
+				</div>   
+				<div data-bind="foreach:Items" >
+                    <span data-bind="text:Quantity"></span> <span data-bind="text:Name"></span><br />
+				</div>
+			</a>
+		</script>
+		<div class="ui-grid-c my-breakpoint" data-bind="foreach: orders" id="ordersGrid">
+			<!-- ko if: $index()%4===0 -->
+			<div class="ui-block-a">
+				<div data-bind="template: { name: 'order-template', data: $data }"></div>	
+			</div>
+			<!-- /ko --> 
+			<!-- ko if: $index()%4===1 -->
+			<div class="ui-block-b">
+				<div data-bind="template: { name: 'order-template', data: $data }"></div>	
+			</div>
+			<!-- /ko --> 			 
+			<!-- ko if: $index()%4===2-->
+			<div class="ui-block-c">
+				<div data-bind="template: { name: 'order-template', data: $data }"></div>	
+			</div>
+			<!-- /ko --> 				 
+			<!-- ko if: $index()%4===3-->
+			<div class="ui-block-d">
+				<div data-bind="template: { name: 'order-template', data: $data }"></div>	
+			</div>
+			<!-- /ko --> 					
+		</div>
+
+       
+
+  </div>
+    <div data-role="footer" data-position="fixed">
+        <div data-role="navbar">
+			<ul>
+				<li>
+                    <a href="#" data-role="button" data-icon="delete" data-theme="b" data-bind="click: resetNewOrder" class="ui-btn-active ui-state-persist">Actief</a>
+				</li>
+				<li>
+                    <a href="#" data-role="button" data-icon="plus" data-theme="b" data-bind="click: saveNewOrder">Klaar</a>
+				</li>
+			</ul>
+		</div>
+    </div>
+</div>

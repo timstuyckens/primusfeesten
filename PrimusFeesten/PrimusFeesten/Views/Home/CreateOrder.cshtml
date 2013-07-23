@@ -1,0 +1,66 @@
+﻿<div data-role="page" id="CreateOrder">
+
+    <div data-role="header">
+        <h1>Nieuwe bestelling</h1>
+         <a href="#Overview" data-icon="bars">Overzicht</a>
+    </div>
+
+    <div data-role="content">
+            <!-- ko if:newOrder -->
+            <form data-bind="with:newOrder" onsubmit="">
+                 <div data-role="fieldcontain">
+                    <label for="tableNumberInput">Tafel nummer</label>
+                   @* <input type="text" name="textinput-fc" id="tableNumberInput" placeholder="Tafel nummer" value="" data-bind="value:tableId">*@
+                    <input type="range" name="slider-1" value="1" min="1" max="20" id="tableNumberInput" placeholder="Tafel nummer"data-bind="value:tableId" />
+                </div>
+                <div id="drinksContainer">
+                    <!-- ko foreach:items -->
+                        <div class="ui-grid-a itemsGrid">
+                             <div class="ui-block-a">
+
+                                  <div class="ui-grid-a orderItemsGrid">
+
+                                       <div class="ui-block-a">
+                                            <input type="number" data-bind="attr:{'id':'drinksQuantity'+$index()},value:quantity"/>
+                                       </div> 
+                                       <div class="ui-block-b">
+                                         <div data-role="controlgroup" data-type="horizontal" >
+                                            <a href="#" data-role="button" data-icon="plus" data-iconpos="notext" data-inline="true" data-bind="click:moreQuantity">More</a>
+                                            <a href="#" data-role="button" data-icon="minus" data-iconpos="notext" data-inline="true" data-bind="click:lessQuantity">Less</a>
+                                        </div>
+                                      </div>
+                                </div>
+                            </div>
+                            <div class="ui-block-b">
+                                <select data-bind="options:$root.drinks,value: name,jqmRefreshSelect:$root.drinks,attr:{'id':'drinksSelect'+$index()}"></select>
+                            </div>
+                        </div>
+                    <!-- /ko --> 
+
+                </div>
+
+
+
+                <a href="#" data-role="button" data-inline="true" data-icon="plus" data-bind="click: addEmptyOrderItem">Extra item</a>
+
+                <div data-role="fieldcontain">
+                    <label for="priceDisplay">Totaal </label>
+                    <span data-bind="text:price" id="priceDisplay"></span> EUR
+                </div>
+            </form>
+            <!-- /ko -->
+    </div>
+    <div data-role="footer" data-position="fixed">
+        <div data-role="navbar">
+			<ul>
+				<li>
+                    <a href="#" data-role="button" data-icon="delete" data-theme="b" data-bind="click: resetNewOrder">Annuleren</a>
+				</li>
+				<li>
+                    <a href="#" data-role="button" data-icon="plus" data-theme="b" data-bind="click: saveNewOrder">Bestellen!</a>
+				</li>
+			</ul>
+		</div>
+    </div>
+
+</div>

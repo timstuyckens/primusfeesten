@@ -1,0 +1,24 @@
+
+
+.my-breakpoint>div {
+padding: 10px;
+}
+.my-breakpoint a {
+	text-decoration:none;
+}
+
+.orderTitle {
+	text-align: center;
+}
+#ordersGrid .ui-link:visited {
+    color: #3e3e3e;
+}
+#ordersGrid .ui-link {
+    color: #3e3e3e;
+}
+
+.orderItemsGrid.ui-grid-a .ui-block-a { width: 30% }
+.orderItemsGrid.ui-grid-a .ui-block-b { width: 70%; } 
+
+.itemsGrid.ui-grid-a > .ui-block-a { width: 60% }
+.itemsGrid.ui-grid-a > .ui-block-b { width: 40%; } 
