@@ -135,7 +135,7 @@
     var orderItem = function (d, parent) {
         var that = {};
         that.name = ko.observable(d.name || "");
-        that.quantity = ko.observable(d.quantiy || 0);
+        that.quantity = ko.observable(d.quantity || 0);
 
         that.moreQuantity = function () {
             that.quantity(parseInt(that.quantity(), 10) + 1);
@@ -200,6 +200,7 @@
             var newOrder = that.newOrder();
             var newOrderJS = ko.toJS(that.newOrder());
             var neworderObject = order(newOrderJS);
+            neworderObject.calculatedPrice = newOrder.price();
             that.orders.push(neworderObject);
             toaster.toastInfo("Besteld");
         };
