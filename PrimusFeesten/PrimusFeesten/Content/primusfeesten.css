@@ -22,3 +22,11 @@ padding: 10px;
 
 .itemsGrid.ui-grid-a > .ui-block-a { width: 60% }
 .itemsGrid.ui-grid-a > .ui-block-b { width: 40%; } 
+
+
+#calcGrid.ui-grid-a > .ui-block-a { width: 25% }
+#calcGrid.ui-grid-a > .ui-block-b { width: 75%; } 
+#calcGrid.ui-grid-a > .ui-block-b > .ui-grid-a > .ui-block-a { width: 28% ;}
+#calcGrid.ui-grid-a > .ui-block-b > .ui-grid-a > .ui-block-b { width: 70%;padding-left: 14px; }
+
+#calcTotalPrice { font-size: 1.5em;}

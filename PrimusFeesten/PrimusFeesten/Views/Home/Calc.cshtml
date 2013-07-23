@@ -1,0 +1,55 @@
+﻿<div data-role="page" id="Calc" data-bind="with:calcViewModel">
+  <div data-role="header">
+    <h1>Quick Calc  </h1>
+    <a href="#CreateOrder" data-icon="bars">Bestellen</a>
+  </div>
+  <div data-role="content">
+
+       
+
+   <!-- ko foreach:calcItems -->
+      <div class="ui-grid-a" id="calcGrid">
+        <div class="ui-block-a">
+            <div data-role="fieldcontain">
+                <label for="textinput-disabled">#  <!-- ko text:price --><!-- /ko -->  EUR</label>
+            </div>
+        </div>
+        <div class="ui-block-b">
+            <div class="ui-grid-a">
+                <div class="ui-block-a">
+                    <input type="number" data-bind="attr:{'id':'drinksQuantity'+$index()},value:quantity"/>
+                </div> 
+                <div class="ui-block-b">
+                    <div data-role="controlgroup" data-type="horizontal" >
+                        <a href="#" data-role="button" data-icon="plus" data-iconpos="notext" data-inline="true" data-bind="click:moreQuantity">More</a>
+                        <a href="#" data-role="button" data-icon="minus" data-iconpos="notext" data-inline="true" data-bind="click:lessQuantity">Less</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+       </div>
+    <!-- /ko --> 
+      <div class="ui-grid-a" id="calcGrid">
+        <div class="ui-block-a">
+        </div>
+        <div class="ui-block-b">
+            <div class="ui-grid-a">
+                <div class="ui-block-a">
+                    <span data-bind="text:price" id="calcTotalPrice"></span>
+                </div> 
+            </div>
+        </div>
+       </div>
+      
+
+  </div>
+    <div data-role="footer" data-position="fixed">
+        <div data-role="navbar">
+			<ul>
+				<li>
+                    <a href="#" data-role="button" data-icon="delete" data-theme="b" data-bind="click: resetCalc" class="ui-btn-active ui-state-persist">Reset</a>
+				</li>
+			</ul>
+		</div>
+    </div>
+</div>

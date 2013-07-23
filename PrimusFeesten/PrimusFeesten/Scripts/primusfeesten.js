@@ -82,11 +82,56 @@
     })();
 
     var defaultPrice = 1.8;
+    var priceForSuperBeers = 2.2;
     var prices = {
         "Bier": defaultPrice,
         "Cola": defaultPrice,
         "Water": defaultPrice
     };
+    var calcItem = function (d, parent) {
+        var that = {};
+        that.quantity = ko.observable(d.quantiy || 0);
+
+        that.moreQuantity = function () {
+            that.quantity(parseInt(that.quantity(), 10) + 1);
+        };
+        that.lessQuantity = function () {
+            var oldVal = parseInt(that.quantity(), 10);
+            if (oldVal > 0) {
+                that.quantity(oldVal - 1);
+            }
+        };
+        that.price = d.price;
+        that.quantity.subscribe(function () { parent.calculatePrice(); });
+
+        return that;
+    }
+    var calcViewModel = function () {
+        var that = {};
+
+        that.calcItems = [
+                calcItem({ quantity: 0, price: defaultPrice }, that),
+                calcItem({ quantity: 0, price: priceForSuperBeers }, that)
+        ];
+        that.price = ko.observable(0);
+        that.calculatePrice = function () {
+            var totalPrice = 0;
+            ko.utils.arrayForEach(that.calcItems, function (i) {
+                var price = i.price;
+                var amount = i.quantity();
+                if (price)
+                    totalPrice += price * amount;
+            });
+            that.price(Math.round(totalPrice * 100) / 100);
+        }
+        that.resetCalc = function () {
+            ko.utils.arrayForEach(that.calcItems, function (i) {
+                i.quantity(0);
+            });
+        }
+        return that;
+    };
+
     var orderItem = function (d, parent) {
         var that = {};
         that.name = ko.observable(d.name || "");
@@ -132,7 +177,7 @@
                 if (price)
                     totalPrice += price * amount;
             });
-            that.price(totalPrice);
+            that.price(Math.round(totalPrice * 100) / 100);
         }
         that.items.subscribe(function () {
             that.calculatePrice();
@@ -166,6 +211,7 @@
             });
             return true;
         };
+        that.calcViewModel = calcViewModel();
         return that;
     }
 
