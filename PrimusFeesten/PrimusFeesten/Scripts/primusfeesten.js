@@ -21,7 +21,7 @@
 
 
 (function () {
-    //send data to socket on click button
+
     $("form").bind('submit', function () {
         return false;
     });
@@ -184,13 +184,12 @@
         });
         return that;
     };
-    var viewmodel = function (hub) {
+    var viewmodel = function () {
         var that = {};
 
         that.orders = ko.observableArray([]);
         that.newOrder = ko.observable(order({ tableId: "", items: null }));
         that.selectedOrder = ko.observable();
-        that.orderCountFromServer = ko.observable();
         that.drinks = ko.observableArray(['', 'Bier', 'Cola', 'Water']);
         that.resetNewOrder = function () {
             that.newOrder().items([]);
@@ -198,19 +197,20 @@
             that.newOrder().addEmptyOrderItem();
         };
         that.saveNewOrder = function () {
-            var order = ko.toJS(that.newOrder());
-            toaster.addBusy(hub.server.addOrder(order).done(function (orderCount) {
-                that.orderCountFromServer(orderCount);
-            }), "Besteld");
+            var newOrder = that.newOrder();
+            var newOrderJS = ko.toJS(that.newOrder());
+            var neworderObject = order(newOrderJS);
+            that.orders.push(neworderObject);
+            toaster.toastInfo("Besteld");
         };
         that.removeSelected = function () {
             var selectedOrder = that.selectedOrder();
-            hub.server.removeOrder(selectedOrder.Id).done(function (orderCount) {
-                that.orderCountFromServer(orderCount);
-                that.orders.remove(selectedOrder);
-            });
+            that.orders.remove(selectedOrder);
             return true;
         };
+        that.orderCount = ko.computed(function () {
+            return that.orders().length;
+        });
         that.calcViewModel = calcViewModel();
         return that;
     }
@@ -219,8 +219,7 @@
 
 
     $(function () {
-        var orderManager = $.connection.orderManager;
-        var vm = viewmodel(orderManager);
+        var vm = viewmodel();
 
         $("#ordersGrid").delegate("a", "click", function () {
             var order = ko.dataFor(this);
@@ -229,28 +228,6 @@
             return false;
         });
 
-        function init() {
-            return orderManager.server.getNotPaidOrders();
-        }
-
-        // Add client-side hub methods that the server will call
-        $.extend(orderManager.client, {
-            incomingOrder: function (d) {
-
-                vm.orders.push(d);
-            }
-
-        });
-
-        // Start the connection
-        $.connection.hub.start()
-            .pipe(init)
-            .done(function (orders) {
-
-                console.log(orders);
-                vm.orders(orders);
-
-            });
 
         ko.applyBindings(vm);
 

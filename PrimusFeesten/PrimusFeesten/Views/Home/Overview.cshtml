@@ -1,14 +1,14 @@
 ﻿<div data-role="page" id="Overview">
   <div data-role="header">
-    <h1>Bestellingen   <span data-bind="text:orderCountFromServer"></span> </h1>
-    <a href="#CreateOrder" data-icon="bars">Bestellen</a>
+    <h1>Bestellingen   <span data-bind="text:orderCount"></span> </h1>
+    <a href="#CreateOrder" data-icon="plus">Bestel</a>
   </div>
   <div data-role="content">
 
        	<div data-role="popup" id="changeStatePopup" data-position-to="window" data-overlay-theme="a" class="ui-content" >
               
                <div data-bind="if:selectedOrder">
-                 Tafel <span data-bind="text:selectedOrder().TableId"></span>
+                 Tafel <span data-bind="text:selectedOrder().tableId"></span>
                 </div> 
 			    <a href="#" data-rel="back" data-role="button" data-theme="c" data-icon="delete" data-iconpos="notext" class="ui-btn-right">Sluiten</a>
 
@@ -21,10 +21,10 @@
       	<script type="text/html" id="order-template">
 			<a class="ui-corner-all ui-bar ui-bar-c"  href="#">
 				<div class="orderTitle">
-				    Tafel <span data-bind="text:TableId"></span>
+				    Tafel <span data-bind="text:tableId"></span>
 				</div>   
-				<div data-bind="foreach:Items" >
-                    <span data-bind="text:Quantity"></span> <span data-bind="text:Name"></span><br />
+				<div data-bind="foreach:items" >
+                    <span data-bind="text:quantity"></span> <span data-bind="text:name"></span><br />
 				</div>
 			</a>
 		</script>
