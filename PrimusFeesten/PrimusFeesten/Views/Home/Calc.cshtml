@@ -6,7 +6,17 @@
   <div data-role="content">
 
        
-
+      <div class="ui-grid-a" id="calcGrid">
+        <div class="ui-block-a">
+        </div>
+        <div class="ui-block-b">
+            <div class="ui-grid-a">
+                <div class="ui-block-a">
+                    <span data-bind="text:price" id="calcTotalPrice"></span> EUR
+                </div> 
+            </div>
+        </div>
+       </div>
    <!-- ko foreach:calcItems -->
       <div class="ui-grid-a" id="calcGrid">
         <div class="ui-block-a">
@@ -29,17 +39,7 @@
         </div>
        </div>
     <!-- /ko --> 
-      <div class="ui-grid-a" id="calcGrid">
-        <div class="ui-block-a">
-        </div>
-        <div class="ui-block-b">
-            <div class="ui-grid-a">
-                <div class="ui-block-a">
-                    <span data-bind="text:price" id="calcTotalPrice"></span>
-                </div> 
-            </div>
-        </div>
-       </div>
+
       
 
   </div>
