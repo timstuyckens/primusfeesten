@@ -83,10 +83,34 @@
 
     var defaultPrice = 1.8;
     var priceForSuperBeers = 2.2;
+    var hotdogPrice = 2.5;
+    var superHeavy=3.6;
+    var kaasSalami=4.0;
+    var warmeHapjesKlein=5.0;
+    var warmeHapjesGroot=9.0;
     var prices = {
-        "Bier": defaultPrice,
-        "Cola": defaultPrice,
-        "Water": defaultPrice
+        "Primus": defaultPrice,
+        "Pepsi": defaultPrice,
+        "Pepsi max": defaultPrice,
+        "Kriek mystic": priceForSuperBeers,
+        "Mystic white": priceForSuperBeers,
+        "Water": defaultPrice,
+        "Ice tea": defaultPrice,
+        "Fruitsap looza": defaultPrice,
+        "Limonade": defaultPrice,
+        "Tonic": defaultPrice,
+        "Bruiswater": defaultPrice,
+        "Special 1900": defaultPrice,
+        "Witte wijn": priceForSuperBeers,
+        "Rode wijn": priceForSuperBeers,
+        "Cava": superHeavy,
+        "sangria": superHeavy,
+        "Koffie": defaultPrice,    
+        "Chips zout/paprika/pickels": defaultPrice,
+        "hotdog": hotdogPrice,
+        "Portie kaas salami": kaasSalami,
+        "Warme hapjes klein": warmeHapjesKlein,
+        "Warme hapjes groot": warmeHapjesGroot
     };
     var calcItem = function (d, parent) {
         var that = {};
@@ -111,7 +135,12 @@
 
         that.calcItems = [
                 calcItem({ quantity: 0, price: defaultPrice }, that),
-                calcItem({ quantity: 0, price: priceForSuperBeers }, that)
+                calcItem({ quantity: 0, price: priceForSuperBeers }, that),
+                calcItem({ quantity: 0, price: hotdogPrice }, that),
+                calcItem({ quantity: 0, price: superHeavy }, that),
+                calcItem({ quantity: 0, price: kaasSalami }, that),
+                calcItem({ quantity: 0, price: warmeHapjesKlein }, that),
+                calcItem({ quantity: 0, price: warmeHapjesGroot }, that)
         ];
         that.price = ko.observable(0);
         that.calculatePrice = function () {
@@ -190,7 +219,14 @@
         that.orders = ko.observableArray([]);
         that.newOrder = ko.observable(order({ tableId: "", items: null }));
         that.selectedOrder = ko.observable();
-        that.drinks = ko.observableArray(['', 'Bier', 'Cola', 'Water']);
+        
+        var tempDrinks = [];
+        tempDrinks.push("");
+        $.each(prices, function (i, e) {
+            tempDrinks.push(i);
+        });
+
+        that.drinks = ko.observableArray(tempDrinks);
         that.resetNewOrder = function () {
             that.newOrder().items([]);
             that.newOrder().tableId(1);
